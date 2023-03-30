@@ -1,4 +1,4 @@
-<a href="http://jabedkamal.github.io">Jabed Kamal</a>
+http://jabedkamal.github.io
 
 
 Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)

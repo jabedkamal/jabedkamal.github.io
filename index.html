@@ -1,51 +1,389 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuition Website</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>আমার কিতাব</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #f0fdf4; /* Green-50 */
+        }
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        /* Highlight Animation */
+        @keyframes highlightPulse {
+            0% { background-color: #dcfce7; transform: scale(1); }
+            50% { background-color: #bbf7d0; transform: scale(1.02); }
+            100% { background-color: #dcfce7; transform: scale(1); }
+        }
+        .highlight-verse {
+            animation: highlightPulse 2s ease-in-out;
+            border-color: #22c55e !important; /* Green-500 */
+            background-color: #f0fdf4 !important; /* Green-50 */
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <h1>Tuition Center</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="courses.html">Courses</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-emerald-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-center items-center relative">
+            <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-3 font-serif tracking-wide">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 md:h-9 md:w-9 opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                আমার কিতাব
+            </h1>
+        </div>
     </header>
 
-    <main>
-        <section class="introduction">
-            <h2>Welcome to Our Tuition Center</h2>
-            <p>At our tuition center, we are committed to providing top-notch education to help students achieve their academic goals. Our experienced tutors and comprehensive curriculum ensure that every student gets the attention and support they need to excel.</p>
-        </section>
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
+        
+        <!-- Main Card -->
+        <div class="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden border border-emerald-100">
+            
+            <!-- Input Section (Fixed at top of card) -->
+            <div class="bg-emerald-50 p-6 md:p-8 border-b border-emerald-200 sticky top-0 z-10">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+                    
+                    <!-- Surah Search -->
+                    <div class="col-span-1 md:col-span-6 relative">
+                        <label class="block text-xs font-bold text-emerald-800 uppercase tracking-wide mb-2 ml-1">সূরা নির্বাচন</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-emerald-500 group-focus-within:text-emerald-700 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                </svg>
+                            </div>
+                            
+                            <input type="text" id="chapterSearchInput" 
+                                placeholder="সূরা খুঁজুন..." 
+                                class="w-full h-12 pl-10 pr-4 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none shadow-sm transition bg-white text-slate-700 font-medium placeholder-emerald-300"
+                                autocomplete="off"
+                            >
+                            
+                            <!-- Dropdown List -->
+                            <ul id="chapterDropdownList" class="absolute z-50 w-full bg-white border border-emerald-100 rounded-lg shadow-2xl mt-2 max-h-60 overflow-y-auto hidden ring-1 ring-black ring-opacity-5">
+                                <!-- JS will populate -->
+                            </ul>
+                        </div>
+                        <input type="hidden" id="selectedChapterId" value="1">
+                    </div>
 
-        <section class="highlights">
-            <h2>Why Choose Us?</h2>
-            <ul>
-                <li>Experienced and qualified tutors</li>
-                <li>Personalized learning plans</li>
-                <li>Small class sizes for individual attention</li>
-                <li>Comprehensive study materials</li>
-                <li>Flexible scheduling options</li>
-                <li>Support for a variety of subjects</li>
-            </ul>
-        </section>
+                    <!-- Ayah Jump Input -->
+                    <div class="col-span-1 md:col-span-4">
+                        <div class="flex justify-between items-center mb-2 ml-1">
+                            <label class="block text-xs font-bold text-emerald-800 uppercase tracking-wide">আয়াত খুঁজুন</label>
+                            <span id="verseLimit" class="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">মোট: -</span>
+                        </div>
+                        <div class="flex items-center h-12 border border-emerald-300 rounded-lg bg-white shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition group hover:border-emerald-400">
+                            <button onclick="adjustVerseInput(-1)" class="w-12 h-full bg-emerald-50 hover:bg-emerald-100 text-emerald-600 hover:text-emerald-800 transition flex items-center justify-center border-r border-emerald-200 active:bg-emerald-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>
+                            </button>
+                            <input type="number" id="verseInput" min="1" value="1" 
+                                class="w-full h-full text-center outline-none font-bold text-emerald-900 bg-transparent text-lg" 
+                                placeholder="1">
+                            <button onclick="adjustVerseInput(1)" class="w-12 h-full bg-emerald-50 hover:bg-emerald-100 text-emerald-600 hover:text-emerald-800 transition flex items-center justify-center border-l border-emerald-200 active:bg-emerald-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                            </button>
+                        </div>
+                    </div>
 
-        <section class="call-to-action">
-            <h2>Get Started Today!</h2>
-            <p>Enroll in our tuition programs and take the first step towards academic success. Contact us to learn more about our courses and how we can help you achieve your educational goals.</p>
-            <a href="contact.html" class="cta-button">Contact Us</a>
-        </section>
+                    <!-- Go Button -->
+                    <div class="col-span-1 md:col-span-2">
+                        <button onclick="scrollToVerse()" class="w-full h-12 bg-white border border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300 font-bold rounded-lg transition transform active:scale-[0.98] flex items-center justify-center gap-2 uppercase tracking-wide text-xs shadow-sm">
+                            যাও
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Display Area -->
+            <div class="bg-white min-h-[500px] relative">
+                
+                <!-- Chapter Header -->
+                <div class="p-8 pb-4 border-b border-dashed border-emerald-100 bg-emerald-50/30 text-center">
+                    <div class="flex items-center justify-center gap-4">
+                        <div class="bg-emerald-600 text-white font-bold h-10 w-10 rounded-full flex items-center justify-center text-lg shadow-lg border-2 border-emerald-100">
+                            <span id="displayChapterNum">1</span>
+                        </div>
+                        <div class="text-left">
+                            <h2 id="displayChapterName" class="text-2xl font-bold text-emerald-900">সূরা সূচনা</h2>
+                            <p id="displayChapterDesc" class="text-xs text-emerald-600 font-medium mt-0.5">৫ আয়াত</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verses List Container -->
+                <div id="versesContainer" class="p-6 md:p-10 space-y-6">
+                    <!-- Verses will be injected here via JS -->
+                </div>
+                
+            </div>
+
+            <!-- Navigation Footer -->
+            <div class="bg-emerald-50 p-5 border-t border-emerald-200 flex justify-between items-center sticky bottom-0 z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                <button onclick="navigateChapter(-1)" id="prevBtn" class="flex items-center gap-2 px-5 py-2.5 bg-white border border-emerald-200 text-emerald-700 rounded-lg hover:bg-emerald-100 transition shadow-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    পূর্ববর্তী সূরা
+                </button>
+
+                <div class="text-xs font-bold text-emerald-400 uppercase tracking-widest select-none hidden md:block">
+                    আল-কিতাব
+                </div>
+
+                <button onclick="navigateChapter(1)" id="nextBtn" class="flex items-center gap-2 px-5 py-2.5 bg-white border border-emerald-200 text-emerald-700 rounded-lg hover:bg-emerald-100 transition shadow-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                    পরবর্তী সূরা
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+            </div>
+        </div>
     </main>
 
-    <footer>
-        <p>&copy; 2024 Tuition Center. All rights reserved.</p>
-    </footer>
+    <script>
+        // ==========================================
+        // ১. ডাটাবেস (DATABASE) - কোরআনিক স্টাইল
+        // ==========================================
+        const myBookData = [
+            {
+                id: 1,
+                name: "সূরা আল-ফাতিহা",
+                desc: "ভূমিকা ও প্রার্থনা",
+                verses: [
+                    "সকল প্রশংসা মানবতার,সুবিচারক ও চিন্তাশীলদের প্রতি।",
+                    "যারা দয়ালু ও করুণাময়।",
+                    "যারা সদা সত্যের পথে থাকে।",
+                    "যারা ভ্রান্ত বিশ্বাস থেকে দূরে ও সত্য প্রকাশ করে।",
+                    "যারা মানুষকে সহজ ও সরল পথ দেখায়।"
+                ]
+            },
+            {
+                id: 2,
+                name: "সূরা আল-হাকিকাহ (বাস্তবতা)",
+                desc: "জীবন ও জগত সম্পর্কে",
+                verses: [
+                    "বাস্তবতা কী? তুমি কি জানো বাস্তবতা কী?",
+                    "মানুষ কি মনে করে তাকে এমনিই ছেড়ে দেওয়া হবে?",
+                    "সময় নদীর স্রোতের মতো প্রবহমান, যা কখনো ফিরে আসে না।",
+                    "মানুষের মন এক অসীম মহাকাশ, যেখানে চিন্তারা নক্ষত্রের মতো জ্বলে।",
+                    "প্রতিটি শিশুই সম্ভাবনার এক নতুন সূর্য নিয়ে জন্মায়, কিন্তু সমাজ তাকে মেঘে ঢেকে দেয়।",
+                    "কর্মই মানুষের একমাত্র পরিচয়, বংশ বা জন্ম নয়।",
+                    "সুখ কোনো গন্তব্য নয়, এটি একটি যাত্রার ধরণ মাত্র।",
+                    "সত্য কখনো কখনো কঠিন হতে পারে, কিন্তু তা সবসময় মুক্তি দেয়।"
+                ]
+            },
+            {
+                id: 3,
+                name: "সূরা আল-মুস্তাকবিল (ভবিষ্যৎ)",
+                desc: "আগামী দিনের কথা",
+                verses: [
+                    "আজকের বীজ আগামীকালের মহীরুহ, তাই বীজ রোপণে সতর্ক হও।",
+                    "প্রযুক্তি মানুষকে মুক্তি দেবে, নাকি নতুন এক শৃঙ্খল পরাবে?",
+                    "শান্তি কেবল নীরবতা নয়, শান্তি হলো ন্যায়ের পূর্ণ উপস্থিতি।",
+                    "নিশ্চই সকল ভ্রান্ত বিশ্বাস অচিরেই বিলুপ্ত হবে এবং সত্য উদ্ভাসিত হবে।"
+                ]
+            }
+        ];
+
+        // Elements
+        let currentChapterId = 1;
+        const chapterSearchInput = document.getElementById('chapterSearchInput');
+        const chapterDropdownList = document.getElementById('chapterDropdownList');
+        const selectedChapterId = document.getElementById('selectedChapterId');
+        const verseInput = document.getElementById('verseInput');
+        const verseLimitText = document.getElementById('verseLimit');
+        const versesContainer = document.getElementById('versesContainer');
+        
+        // Header Info Elements
+        const chapterNameDisplay = document.getElementById('displayChapterName');
+        const chapterDescDisplay = document.getElementById('displayChapterDesc');
+        const chapterNumDisplay = document.getElementById('displayChapterNum');
+
+        // Initialize
+        window.onload = () => {
+            renderChapterDropdown(myBookData);
+            loadChapter(1); // Load first chapter initially
+
+            // Close dropdown on click outside
+            document.addEventListener('click', (e) => {
+                if (!chapterSearchInput.contains(e.target) && !chapterDropdownList.contains(e.target)) {
+                    chapterDropdownList.classList.add('hidden');
+                }
+            });
+        };
+
+        // --- Core Logic: Load & Render All Verses ---
+
+        function loadChapter(chapterId) {
+            const chapter = myBookData.find(c => c.id == chapterId);
+            if (!chapter) return;
+
+            currentChapterId = chapter.id;
+            
+            // Header Info Update
+            chapterNameDisplay.innerText = chapter.name;
+            chapterDescDisplay.innerText = `${chapter.desc} • ${convertToBanglaDigit(chapter.verses.length)} আয়াত`;
+            chapterNumDisplay.innerText = convertToBanglaDigit(chapter.id);
+
+            // Sync Inputs
+            chapterSearchInput.value = `${chapter.id}. ${chapter.name}`;
+            selectedChapterId.value = chapter.id;
+            
+            // Update Verse Limit Info
+            verseInput.value = 1;
+            verseInput.max = chapter.verses.length;
+            verseLimitText.innerText = `মোট: ${convertToBanglaDigit(chapter.verses.length)}`;
+
+            // Render Verses
+            versesContainer.innerHTML = ''; // Clear previous content
+            
+            chapter.verses.forEach((verseText, index) => {
+                const verseNum = index + 1;
+                const banglaNum = convertToBanglaDigit(verseNum);
+                
+                // Create Verse Card
+                const verseCard = document.createElement('div');
+                verseCard.id = `verse-${verseNum}`;
+                verseCard.className = "flex gap-4 p-5 md:p-6 rounded-xl border border-emerald-100 hover:border-emerald-300 hover:shadow-lg transition duration-300 bg-white group relative overflow-hidden";
+                
+                verseCard.innerHTML = `
+                    <div class="flex-shrink-0 pt-1">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-700 font-bold text-lg border-2 border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition shadow-sm font-serif">
+                            ${banglaNum}
+                        </span>
+                    </div>
+                    <div class="flex-grow z-10">
+                        <p class="text-xl md:text-2xl text-slate-700 leading-loose font-medium font-serif">
+                            ${verseText}
+                        </p>
+                    </div>
+                `;
+                versesContainer.appendChild(verseCard);
+            });
+
+            // Update Navigation Button States
+            document.getElementById('prevBtn').disabled = (currentChapterId === 1);
+            document.getElementById('nextBtn').disabled = (currentChapterId === myBookData.length);
+        }
+
+        // --- Helper: Convert to Bangla Digits ---
+        function convertToBanglaDigit(number) {
+            const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return number.toString().split('').map(digit => banglaDigits[digit] || digit).join('');
+        }
+
+        // --- Navigation Logic (Chapter Based) ---
+
+        function navigateChapter(direction) {
+            let newChapterId = currentChapterId + direction;
+            if (newChapterId >= 1 && newChapterId <= myBookData.length) {
+                loadChapter(newChapterId);
+                // Scroll to top of content
+                document.querySelector('.bg-white.min-h-\\[500px\\]').scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        // --- Search/Dropdown Logic ---
+
+        function renderChapterDropdown(list) {
+            chapterDropdownList.innerHTML = '';
+            if (list.length === 0) {
+                chapterDropdownList.innerHTML = '<li class="p-4 text-emerald-600 text-sm text-center">কিছু পাওয়া যায়নি</li>';
+                return;
+            }
+
+            list.forEach(chapter => {
+                const li = document.createElement('li');
+                li.className = "p-3 hover:bg-emerald-50 cursor-pointer border-b border-emerald-50 last:border-0 transition text-sm flex justify-between items-center group";
+                li.innerHTML = `
+                    <span class="text-slate-700 group-hover:text-emerald-800"><span class="font-bold text-emerald-600 w-8 inline-block bg-emerald-50 rounded text-center mr-2 py-0.5">${convertToBanglaDigit(chapter.id)}</span> ${chapter.name}</span>
+                    <span class="text-xs text-slate-400 ml-2 group-hover:text-emerald-500">${chapter.verses.length} আয়াত</span>
+                `;
+                li.onclick = () => {
+                    loadChapter(chapter.id);
+                    chapterDropdownList.classList.add('hidden');
+                };
+                chapterDropdownList.appendChild(li);
+            });
+        }
+
+        chapterSearchInput.addEventListener('focus', () => chapterDropdownList.classList.remove('hidden'));
+        
+        chapterSearchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = myBookData.filter(c => 
+                c.name.toLowerCase().includes(term) || 
+                c.id.toString().includes(term)
+            );
+            renderChapterDropdown(filtered);
+            chapterDropdownList.classList.remove('hidden');
+        });
+
+        // --- Scroll/Highlight Logic ---
+
+        function adjustVerseInput(amount) {
+            let current = parseInt(verseInput.value) || 0;
+            const max = parseInt(verseInput.max) || 1;
+            let newValue = current + amount;
+            if (newValue < 1) newValue = 1;
+            if (newValue > max) newValue = max;
+            verseInput.value = newValue;
+            scrollToVerse(); // Auto scroll on button click
+        }
+
+        function scrollToVerse() {
+            const verseNum = parseInt(verseInput.value);
+            const element = document.getElementById(`verse-${verseNum}`);
+            
+            // Remove previous highlights
+            document.querySelectorAll('.highlight-verse').forEach(el => el.classList.remove('highlight-verse'));
+
+            if (element) {
+                // Scroll with offset for sticky header
+                const headerOffset = 220; 
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+
+                // Add highlight class
+                element.classList.add('highlight-verse');
+            }
+        }
+
+        // Enter key support
+        verseInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") scrollToVerse();
+        });
+        chapterSearchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && !chapterDropdownList.classList.contains('hidden')) {
+                chapterDropdownList.firstChild?.click();
+            }
+        });
+
+    </script>
 </body>
 </html>
